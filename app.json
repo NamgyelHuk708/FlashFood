@@ -1,36 +1,45 @@
 {
-  "expo": {
-    "name": "FlashFood",
-    "slug": "flashfood",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "backgroundColor": "#FF6B35",
-      "resizeMode": "contain"
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app needs access to your location to show nearby restaurants."
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#FF6B35"
+    "expo": {
+      "name": "Flash Food",
+      "slug": "flash-food-app",
+      "version": "1.0.0",
+      "orientation": "portrait",
+      "icon": "./assets/icon.png",
+      "userInterfaceStyle": "light",
+      "splash": {
+        "image": "./assets/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff"
       },
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-location",
-        {
-          "locationAlwaysAndWhenInUsePermission": "Allow FlashFood to use your location to find nearby restaurants."
+      "assetBundlePatterns": ["**/*"],
+      "ios": {
+        "supportsTablet": true,
+        "config": {
+          "googleMapsApiKey": "YOUR_GOOGLE_MAPS_API_KEY"
         }
+      },
+      "android": {
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/adaptive-icon.png",
+          "backgroundColor": "#FFFFFF"
+        },
+        "config": {
+          "googleMaps": {
+            "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+          }
+        }
+      },
+      "web": {
+        "favicon": "./assets/favicon.png"
+      },
+      "plugins": [
+        [
+          "expo-location",
+          {
+            "locationAlwaysAndWhenInUsePermission": "Allow Flash Food to use your location to find nearby restaurants and provide personalized recommendations."
+          }
+        ]
       ]
-    ],
-    "scheme": "flashfood"
+    }
   }
-}
+  
