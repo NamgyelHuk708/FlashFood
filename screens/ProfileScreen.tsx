@@ -201,6 +201,12 @@ export default function ProfileScreen({ navigation }: any) {
           <Ionicons name="chevron-forward" size={20} color="#ccc" />
         </TouchableOpacity>
 
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("RestaurantOwner")}>
+          <Ionicons name="restaurant" size={24} color="#FF6B35" />
+          <Text style={styles.menuText}>My Restaurants</Text>
+          <Ionicons name="chevron-forward" size={20} color="#ccc" />
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("EditUsername")}>
           <Ionicons name="person" size={24} color="#FF6B35" />
           <Text style={styles.menuText}>Edit Username</Text>
