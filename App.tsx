@@ -20,6 +20,7 @@ import AddRestaurantScreen from "./screens/AddRestaurantScreen"
 import ManageRestaurantScreen from "./screens/ManageRestaurantScreen"
 import EditRestaurantScreen from "./screens/EditRestaurantScreen"
 import ManagePhotosScreen from "./screens/ManagePhotosScreen"
+import ManageReviewsScreen from "./screens/ManageReviewsScreen"
 import { Ionicons } from "@expo/vector-icons"
 
 const Stack = createStackNavigator()
@@ -95,6 +96,7 @@ export default function App() {
             <Stack.Screen name="ManageRestaurant" component={ManageRestaurantScreen} options={{ headerShown: false }} />
             <Stack.Screen name="EditRestaurant" component={EditRestaurantScreen} options={{ headerShown: false }} />
             <Stack.Screen name="ManagePhotos" component={ManagePhotosScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="ManageReviews" component={ManageReviewsScreen} options={{ headerShown: false }} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthScreen} options={{ headerShown: false }} />
