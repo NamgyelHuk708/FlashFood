@@ -15,11 +15,20 @@ interface RecentReview {
   } | null
 }
 
+interface UserProfile {
+  id: string
+  email: string
+  username: string
+  full_name: string
+  created_at: string
+}
+
 export default function ProfileScreen({ navigation }: any) {
   const [user, setUser] = useState<any>(null)
   const [reviewCount, setReviewCount] = useState(0)
   const [favoriteCount, setFavoriteCount] = useState(0)
   const [recentReviews, setRecentReviews] = useState<RecentReview[]>([])
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
 
   useEffect(() => {
     getProfile()
@@ -32,7 +41,16 @@ export default function ProfileScreen({ navigation }: any) {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      setUser(user)
+      if (user) {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, email, username, full_name, created_at")
+          .eq("id", user.id)
+          .single()
+
+        if (error) throw error
+        setUserProfile(data)
+      }
     } catch (error: any) {
       Alert.alert("Error", error.message)
     }
@@ -122,9 +140,10 @@ export default function ProfileScreen({ navigation }: any) {
         <View style={styles.avatarContainer}>
           <Ionicons name="person-circle" size={80} color="#FF6B35" />
         </View>
-        <Text style={styles.email}>{user?.email}</Text>
+        <Text style={styles.username}>@{userProfile?.username || "username"}</Text>
+        <Text style={styles.email}>{userProfile?.email}</Text>
         <Text style={styles.memberSince}>
-          Member since {user?.created_at ? new Date(user.created_at).getFullYear() : "2024"}
+          Member since {userProfile?.created_at ? new Date(userProfile.created_at).getFullYear() : "2024"}
         </Text>
       </View>
 
@@ -182,9 +201,9 @@ export default function ProfileScreen({ navigation }: any) {
           <Ionicons name="chevron-forward" size={20} color="#ccc" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem}>
-          <Ionicons name="settings" size={24} color="#FF6B35" />
-          <Text style={styles.menuText}>Settings</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate("EditUsername")}>
+          <Ionicons name="person" size={24} color="#FF6B35" />
+          <Text style={styles.menuText}>Edit Username</Text>
           <Ionicons name="chevron-forward" size={20} color="#ccc" />
         </TouchableOpacity>
 
@@ -218,10 +237,15 @@ const styles = StyleSheet.create({
   avatarContainer: {
     marginBottom: 15,
   },
-  email: {
-    fontSize: 18,
+  username: {
+    fontSize: 20,
     fontWeight: "bold",
-    color: "#333",
+    color: "#FF6B35",
+    marginBottom: 5,
+  },
+  email: {
+    fontSize: 14,
+    color: "#666",
     marginBottom: 5,
   },
   memberSince: {

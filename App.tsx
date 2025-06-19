@@ -13,7 +13,9 @@ import RestaurantDetailScreen from "./screens/RestaurantDetailScreen"
 import ProfileScreen from "./screens/ProfileScreen"
 import FavoritesScreen from "./screens/FavoritesScreen"
 import MapScreen from "./screens/MapScreen"
+import MyReviewsScreen from "./screens/MyReviewsScreen"
 import { Ionicons } from "@expo/vector-icons"
+import EditUsernameScreen from "./screens/EditUsernameScreen"
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -81,6 +83,8 @@ export default function App() {
               component={RestaurantDetailScreen}
               options={{ title: "Restaurant Details" }}
             />
+            <Stack.Screen name="MyReviews" component={MyReviewsScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditUsername" component={EditUsernameScreen} options={{ headerShown: false }} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthScreen} options={{ headerShown: false }} />

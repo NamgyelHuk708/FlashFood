@@ -6,6 +6,7 @@ import { supabase } from "../lib/supabase"
 import { Ionicons } from "@expo/vector-icons"
 
 interface Review {
+  user_username: string
   id: string
   user_id: string
   rating: number
@@ -202,6 +203,8 @@ export default function RestaurantDetailScreen({ route, navigation }: any) {
   }
 
   const renderUserAvatar = (review: Review) => {
+    const displayName = review.user_full_name || review.user_username || review.user_email || "Anonymous"
+
     if (review.user_avatar_url) {
       return <Image source={{ uri: review.user_avatar_url }} style={styles.userAvatar} />
     }
@@ -253,7 +256,9 @@ export default function RestaurantDetailScreen({ route, navigation }: any) {
                 <View style={styles.reviewUserInfo}>
                   {renderUserAvatar(review)}
                   <View style={styles.reviewUserDetails}>
-                    <Text style={styles.reviewUserName}>{review.user_full_name || review.user_email}</Text>
+                    <Text style={styles.reviewUserName}>
+                      {review.user_username ? `@${review.user_username}` : review.user_full_name || review.user_email}
+                    </Text>
                     <Text style={styles.reviewDate}>{new Date(review.created_at).toLocaleDateString()}</Text>
                   </View>
                 </View>
