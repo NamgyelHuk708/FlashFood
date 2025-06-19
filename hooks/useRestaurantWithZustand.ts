@@ -3,7 +3,7 @@
 // BUSINESS LAYER - Enhanced Restaurant Hook using Zustand
 import { useEffect, useCallback } from "react"
 import { Alert } from "react-native"
-import { RestaurantService, type Restaurant, type RestaurantFilters } from "../services/restaurantService"
+import { RestaurantService } from "../services/restaurantService"
 import { FavoriteService } from "../services/favouriteService"
 import { RestaurantActions } from "../bussiness/RestaurantActions"
 import { useRestaurantStore } from "../stores/restaurantStore"
@@ -11,27 +11,7 @@ import { useAuthStore } from "../stores/authStore"
 
 const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
-interface UseRestaurantsReturn {
-  restaurants: Restaurant[]
-  allRestaurants: Restaurant[]
-  favorites: string[]
-  filters: RestaurantFilters
-  loading: boolean
-  error: string | null
-  updateFilters: (newFilters: Partial<RestaurantFilters>) => void
-  clearFilters: () => void
-  toggleFavorite: (restaurantId: string) => Promise<void>
-  sortRestaurants: (
-    sortBy: "rating" | "distance" | "name",
-    userLocation?: { latitude: number; longitude: number },
-  ) => void
-  refetch: (forceRefresh?: boolean) => Promise<void>
-  clearCache: () => void
-  hasActiveFilters: boolean
-  filterSummary: string
-}
-
-export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
+export const useRestaurantsWithZustand = () => {
   const {
     restaurants,
     filteredRestaurants,
@@ -56,14 +36,14 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
   const { user } = useAuthStore()
 
   // Check if cache is still valid
-  const isCacheValid = useCallback((): boolean => {
+  const isCacheValid = useCallback(() => {
     if (!lastFetch) return false
     return Date.now() - lastFetch < CACHE_DURATION
   }, [lastFetch])
 
   // Fetch restaurants with caching
   const fetchRestaurants = useCallback(
-    async (forceRefresh = false): Promise<void> => {
+    async (forceRefresh = false) => {
       if (!forceRefresh && isCacheValid() && restaurants.length > 0) {
         return // Use cached data
       }
@@ -84,7 +64,7 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
   )
 
   // Fetch user favorites
-  const fetchFavorites = useCallback(async (): Promise<void> => {
+  const fetchFavorites = useCallback(async () => {
     if (!user) return
 
     try {
@@ -96,14 +76,14 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
   }, [user, setFavorites])
 
   // Apply filters to restaurants
-  const applyFilters = useCallback((): void => {
+  const applyFilters = useCallback(() => {
     const filtered = RestaurantActions.filterRestaurants(restaurants, filters)
     setFilteredRestaurants(filtered)
   }, [restaurants, filters, setFilteredRestaurants])
 
   // Toggle favorite status
   const toggleFavorite = useCallback(
-    async (restaurantId: string): Promise<void> => {
+    async (restaurantId: string) => {
       if (!user) return
 
       try {
@@ -125,7 +105,7 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
 
   // Sort restaurants
   const sortRestaurants = useCallback(
-    (sortBy: "rating" | "distance" | "name", userLocation?: { latitude: number; longitude: number }): void => {
+    (sortBy: "rating" | "distance" | "name", userLocation?: { latitude: number; longitude: number }) => {
       const sorted = RestaurantActions.sortRestaurants(filteredRestaurants, sortBy, userLocation)
       setFilteredRestaurants(sorted)
     },
@@ -134,14 +114,14 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
 
   // Update filters
   const handleUpdateFilters = useCallback(
-    (newFilters: Partial<RestaurantFilters>): void => {
+    (newFilters: Partial<typeof filters>) => {
       updateFilters(newFilters)
     },
     [updateFilters],
   )
 
   // Clear all filters
-  const handleClearFilters = useCallback((): void => {
+  const handleClearFilters = useCallback(() => {
     clearFilters()
   }, [clearFilters])
 
@@ -175,7 +155,7 @@ export const useRestaurantsWithZustand = (): UseRestaurantsReturn => {
     clearFilters: handleClearFilters,
     toggleFavorite,
     sortRestaurants,
-    refetch: fetchRestaurants,
+    refetch: () => fetchRestaurants(true),
     clearCache,
     hasActiveFilters: RestaurantActions.hasActiveFilters(filters),
     filterSummary: RestaurantActions.getFilterSummary(filters),
